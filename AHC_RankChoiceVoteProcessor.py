@@ -103,7 +103,10 @@ while (seat_count > 0):
         
         # transfer surplus votes for elected candidate to next choice
         total_votes_for_winner = max(candidate_ballot_count)
-        surplus_votes_for_winner = total_votes_for_winner - election_threshold
+        if (total_votes_for_winner > election_threshold):
+            surplus_votes_for_winner = total_votes_for_winner - election_threshold
+        else:
+            surplus_votes_for_winner = 0
         candidate_ballot_count.pop(x)
         
         for ballot in votes:
@@ -165,4 +168,8 @@ while (seat_count > 0):
         updated_candidate_names.insert(0, "Weight")
         writeCSV.writerow(updated_candidate_names)
         for ballot in votes:
-            writeCSV.writerow(ballot)            
+            if (ballot[0] > 0):         # Remove weightless ballots
+                temp_y = ballot.copy()
+                temp_y.pop(0)
+                if 1 in temp_y:         # Remove exhausted ballots
+                    writeCSV.writerow(ballot)            
